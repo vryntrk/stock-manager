@@ -4,6 +4,6 @@ def sign_up():
     verification = input("Enter An Animal Name To Later Verification: ")
 
 
-def login():
+def sing_in():
     username = input("Enter Username: ")
     password = input("Enter Password: ")

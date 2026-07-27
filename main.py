@@ -21,19 +21,39 @@ def sign_up():
     else:
         f = open("user_info.txt", "w", encoding="utf-8")
         f.close()
-        print("Database File Created")
+        sign_up()
+
 
 def sign_in():
     if os.path.exists("user_info.txt"):
-        username = input("Enter Username: ")
-        password = input("Enter Password: ")
+        df_user = pd.read_csv("user_info.txt", sep=",", engine="python", header=None, names=["Username", "Password", "Verification"])
+        usernames = list(df_user["Username"])
+        passwords = list(df_user["Password"])
+
+        error_count = 0
+
+        while error_count < 3:
+            username = input("Enter Username: ")
+            if username in usernames:
+                index = usernames.index(username)
+                error_count = 0
+                while error_count < 3:
+                    password = input("Enter Password: ")
+                    if passwords[index] == password:
+                        print("Access Granted")
+                    error_count += 1
+                    print("Incorrect Password")
+
+            else:
+                error_count += 1
+                print("Invalid Username")
+
     else:
         sign_up()
 
 
 def edit_user(username, password):
-    df_user = pd.read_csv("user_info.txt", sep=",", engine="python", header=None,
-                          names=["Username", "Password", "Verification"])
+    df_user = pd.read_csv("user_info.txt", sep=",", engine="python", header=None, names=["Username", "Password", "Verification"])
     usernames = list(df_user["Username"])
     passwords = list(df_user["Password"])
 
@@ -96,7 +116,3 @@ def edit_user(username, password):
 
         if option == 4:
             break
-
-
-
-

@@ -52,20 +52,25 @@ def sign_in():
         sign_up()
 
 
-def edit_user(username, password):
+def rewrite(dataframe):
+    with open("user_info.txt", "w") as f:
+        for data in dataframe:
+            print(f"{data[0]},{data[1]},{data[2]}\n")
+
+
+def edit_user():
     df_user = pd.read_csv("user_info.txt", sep=",", engine="python", header=None, names=["Username", "Password", "Verification"])
     usernames = list(df_user["Username"])
-    passwords = list(df_user["Password"])
 
-
+    former_username = input("Enter Current Username: ")
+    index = usernames.index(former_username)
 
     while True:
-
-        print("Editing Options: "
-              "1) Only Username"
-              "2) Only Password"
-              "3) Both"
-              "4) Exit"
+        print("Editing Options:\n"
+              "1) Only Username\n"
+              "2) Only Password\n"
+              "3) Both\n"
+              "4) Exit\n"
               "(Enter 1-4)")
 
         option = int(input())
@@ -78,41 +83,39 @@ def edit_user(username, password):
                     print("Username Already Exists!")
                     continue
 
-                df_user.loc[usernames.index(username),"Username"] = new_username
+                df_user.loc[index,"Username"] = new_username
                 print("Username Successfully Changed.")
                 break
 
-
-        if option == 2:
+        elif option == 2:
             while True:
                 new_password = input("Enter New Password: ")
 
-                if new_password in passwords:
-                    print("Password Already Exists!")
-                    continue
-
-                df_user.loc[passwords.index(password),"Password"] = new_password
+                df_user.loc[index,"Password"] = new_password
                 print("Password Successfully Changed.")
                 break
 
-        if option == 3:
+        elif option == 3:
             while True:
                 new_username = input("Enter New Username: ")
 
-                if username in usernames:
+                if new_username in usernames:
                     print("Username Already Exists!")
                     continue
 
                 new_password = input("Enter New Password: ")
 
-                if password in passwords:
-                    print("Password Already Exists!")
-                    continue
-
-                df_user.loc[passwords.index(password)] = [new_username, new_password]
+                df_user.loc[index] = [new_username, new_password]
 
                 print("Username And Password Successfully Changed.")
                 break
 
-        if option == 4:
+        elif option == 4:
+            rewrite(df_user)
             break
+
+        else:
+            print("Invalid Option")
+
+
+edit_user()

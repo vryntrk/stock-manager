@@ -49,13 +49,22 @@ def sign_in():
                 print("Invalid Username")
 
     else:
+        print("You Must Create An Account Before Signing In")
+        print("Redirecting to Sign Up")
         sign_up()
 
 
-def rewrite(dataframe):
-    with open("user_info.txt", "w") as f:
-        for data in dataframe:
-            print(f"{data[0]},{data[1]},{data[2]}\n")
+def verification(dataframe, idx):
+    is_verified = False
+    while not is_verified:
+        verify = input("Enter Your Verification Animal or enter cancel to exit: ")
+        if verify == "cancel":
+            break
+        elif dataframe.loc[idx, "Verification"] == verify:
+            is_verified = True
+        else:
+            print("Incorrect Verification Animal!")
+    return is_verified
 
 
 def edit_user():
@@ -77,41 +86,50 @@ def edit_user():
 
         if option == 1:
             while True:
-                new_username = input("Enter New Username: ")
+                new_username = input("Enter New Username or enter cancel to exit: ")
 
-                if new_username in usernames:
+                if new_username == "cancel":
+                    break
+                elif new_username in usernames:
                     print("Username Already Exists!")
                     continue
 
-                df_user.loc[index,"Username"] = new_username
-                print("Username Successfully Changed.")
-                break
+                if verification(df_user, index):
+                    df_user.loc[index,"Username"] = new_username
+                    print("Username Successfully Changed.")
+                    break
 
         elif option == 2:
             while True:
-                new_password = input("Enter New Password: ")
+                new_password = input("Enter New Password or enter cancel to exit: ")
 
-                df_user.loc[index,"Password"] = new_password
-                print("Password Successfully Changed.")
-                break
+                if new_password == "cancel":
+                    break
+                if verification(df_user, index):
+                    df_user.loc[index,"Password"] = new_password
+                    print("Password Successfully Changed.")
+                    break
 
         elif option == 3:
             while True:
-                new_username = input("Enter New Username: ")
-
-                if new_username in usernames:
+                new_username = input("Enter New Username or enter cancel to exit: ")
+                if new_username == "cancel":
+                    break
+                elif new_username in usernames:
                     print("Username Already Exists!")
                     continue
 
-                new_password = input("Enter New Password: ")
+                new_password = input("Enter New Password or enter cancel to exit: ")
+                if new_password == "cancel":
+                    break
 
-                df_user.loc[index] = [new_username, new_password]
-
-                print("Username And Password Successfully Changed.")
-                break
+                if verification(df_user, index):
+                    df_user.loc[index, ["Username", "Password"]] = [new_username, new_password]
+                    print("Username And Password Successfully Changed.")
+                    break
 
         elif option == 4:
-            rewrite(df_user)
+            df_user.to_csv("user_info.txt", sep=",", header=None, index=False)
             break
 
         else:

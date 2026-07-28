@@ -12,10 +12,10 @@ def sign_up():
                 print("Username Already Exists")
                 continue
             password = input("Enter Password: ")
-            verification = input("Enter An Animal Name To Later Verification: ")
+            verification_animal = input("Enter An Animal Name To Later Verification: ")
 
             with open("user_info.txt", "a") as f:
-                f.write(f"{username},{password},{verification}\n")
+                f.write(f"{username},{password},{verification_animal}\n")
                 print("User Registered Successfully")
                 break
     else:

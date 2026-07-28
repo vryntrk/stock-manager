@@ -17,6 +17,8 @@ def sign_up():
             with open("user_info.txt", "a") as f:
                 f.write(f"{username},{password},{verification_animal}\n")
                 print("User Registered Successfully")
+
+            with open(username + "_database.txt", "w") as user_database:
                 break
     else:
         f = open("user_info.txt", "w", encoding="utf-8")
@@ -30,6 +32,19 @@ def sign_in():
         usernames = list(df_user["Username"])
         passwords = list(df_user["Password"])
 
+        try:
+
+            usernames[0]
+
+        except IndexError:
+            print("No User Found")
+            print("Redirecting to Sign Up")
+            sign_up()
+            df_user = pd.read_csv("user_info.txt", sep=",", engine="python", header=None,
+                                  names=["Username", "Password", "Verification"])
+            usernames = list(df_user["Username"])
+            passwords = list(df_user["Password"])
+
         error_count = 0
 
         while error_count < 3:
@@ -41,8 +56,10 @@ def sign_in():
                     password = input("Enter Password: ")
                     if passwords[index] == password:
                         print("Access Granted")
-                    error_count += 1
-                    print("Incorrect Password")
+                        break
+                    else:
+                        error_count += 1
+                        print("Incorrect Password")
 
             else:
                 error_count += 1
@@ -68,72 +85,94 @@ def verification(dataframe, idx):
 
 
 def edit_user():
-    df_user = pd.read_csv("user_info.txt", sep=",", engine="python", header=None, names=["Username", "Password", "Verification"])
-    usernames = list(df_user["Username"])
+    if os.path.exists("user_info.txt"):
 
-    former_username = input("Enter Current Username: ")
-    index = usernames.index(former_username)
+        df_user = pd.read_csv("user_info.txt", sep=",", engine="python", header=None,
+                              names=["Username", "Password", "Verification"])
+        usernames = list(df_user["Username"])
 
-    while True:
-        print("Editing Options:\n"
-              "1) Only Username\n"
-              "2) Only Password\n"
-              "3) Both\n"
-              "4) Exit\n"
-              "(Enter 1-4)")
+        try:
 
-        option = int(input())
+            usernames[0]
 
-        if option == 1:
-            while True:
-                new_username = input("Enter New Username or enter cancel to exit: ")
+        except IndexError:
+            print("No User Found")
+            print("Redirecting to Sign Up")
+            sign_up()
+            df_user = pd.read_csv("user_info.txt", sep=",", engine="python", header=None,
+                                  names=["Username", "Password", "Verification"])
+            usernames = list(df_user["Username"])
 
-                if new_username == "cancel":
-                    break
-                elif new_username in usernames:
-                    print("Username Already Exists!")
-                    continue
+        former_username = input("Enter Current Username: ")
 
-                if verification(df_user, index):
-                    df_user.loc[index,"Username"] = new_username
-                    print("Username Successfully Changed.")
-                    break
+        index = usernames.index(former_username)
 
-        elif option == 2:
-            while True:
-                new_password = input("Enter New Password or enter cancel to exit: ")
+        while True:
+            print("Editing Options:\n"
+                  "1) Only Username\n"
+                  "2) Only Password\n"
+                  "3) Both\n"
+                  "4) Exit\n"
+                  "(Enter 1-4)")
 
-                if new_password == "cancel":
-                    break
-                if verification(df_user, index):
-                    df_user.loc[index,"Password"] = new_password
-                    print("Password Successfully Changed.")
-                    break
+            option = int(input())
 
-        elif option == 3:
-            while True:
-                new_username = input("Enter New Username or enter cancel to exit: ")
-                if new_username == "cancel":
-                    break
-                elif new_username in usernames:
-                    print("Username Already Exists!")
-                    continue
+            if option == 1:
+                while True:
+                    new_username = input("Enter New Username or enter cancel to exit: ")
 
-                new_password = input("Enter New Password or enter cancel to exit: ")
-                if new_password == "cancel":
-                    break
+                    if new_username == "cancel":
+                        break
+                    elif new_username in usernames:
+                        print("Username Already Exists!")
+                        continue
 
-                if verification(df_user, index):
-                    df_user.loc[index, ["Username", "Password"]] = [new_username, new_password]
-                    print("Username And Password Successfully Changed.")
-                    break
+                    if verification(df_user, index):
+                        df_user.loc[index,"Username"] = new_username
 
-        elif option == 4:
-            df_user.to_csv("user_info.txt", sep=",", header=None, index=False)
-            break
+                        os.rename(former_username + "_database.txt", new_username + "_database.txt")
 
-        else:
-            print("Invalid Option")
+                        print("Username Successfully Changed.")
+                        break
+
+            elif option == 2:
+                while True:
+                    new_password = input("Enter New Password or enter cancel to exit: ")
+
+                    if new_password == "cancel":
+                        break
+                    if verification(df_user, index):
+                        df_user.loc[index,"Password"] = new_password
+                        print("Password Successfully Changed.")
+                        break
+
+            elif option == 3:
+                while True:
+                    new_username = input("Enter New Username or enter cancel to exit: ")
+                    if new_username == "cancel":
+                        break
+                    elif new_username in usernames:
+                        print("Username Already Exists!")
+                        continue
+
+                    new_password = input("Enter New Password or enter cancel to exit: ")
+                    if new_password == "cancel":
+                        break
+
+                    if verification(df_user, index):
+                        df_user.loc[index, ["Username", "Password"]] = [new_username, new_password]
+
+                        os.rename(former_username + "_database.txt", new_username + "_database.txt")
+
+                        print("Username And Password Successfully Changed.")
+                        break
+
+            elif option == 4:
+                df_user.to_csv("user_info.txt", sep=",", header=False, index=False)
+                break
+
+            else:
+                print("Invalid Option")
 
 
-edit_user()
+sign_in()

@@ -53,3 +53,138 @@ def add(username):
             break
         except ValueError:
             print("Product Price Must Contain Only Numbers")
+
+def list_product(username):
+
+    df_stocks = pd.read_csv(username + "_database.txt", sep=",", engine="python", header=None, names=["Category", "Name", "Amount", "Unit", "Cost", "Price"])
+
+    df_stocks = df_stocks.sort_values(by=["Category"])
+    df_stocks.index = df_stocks.index + 1
+
+    print("\nList of Products:")
+    print(df_stocks)
+
+def edit_product(username):
+    df_stocks = pd.read_csv(username + "_database.txt", sep=",", engine="python", header=None,
+                            names=["Category", "Name", "Amount", "Unit", "Cost", "Price"])
+
+    df_stocks = df_stocks.sort_values(by=["Category"])
+    df_stocks.index = df_stocks.index + 1
+
+    list_product(username)
+
+    print()
+
+    index_to_edit = 0
+
+    while True:
+        try:
+            index_to_edit = int(input("Enter The Index Of The Product Which You Would Like To Edit: ")) - 1
+
+        except ValueError:
+            print("Invalid Input, The Index Must Be An Integer")
+            continue
+        else:
+            break
+
+    print(df_stocks.iloc[index_to_edit])
+
+    while True:
+        print("Choose One To Edit:\n"+
+              "1. Category\n"
+              "2. Name\n"
+              "3. Amount\n"
+              "4. Unit\n"
+              "5. Cost\n"
+              "6. Price\n"
+              "7. Exit\n"
+              "(Enter 1-7)")
+
+        choice = input()
+
+        if choice == "1":
+            while True:
+                new_category = input("Enter New Category or cancel to exit: ")
+
+                if new_category == "cancel":
+                    break
+
+                df_stocks.iloc[index_to_edit, 0] = new_category
+                df_stocks.to_csv(username + "_database.txt", sep=",", index=False, header=False)
+
+                print("Category Successfully Changed.")
+                break
+
+        elif choice == "2":
+            while True:
+                new_name = input("Enter New Name or cancel to exit: ")
+
+                if new_name == "cancel":
+                    break
+
+                df_stocks.iloc[index_to_edit, 1] = new_name
+                df_stocks.to_csv(username + "_database.txt", sep=",", index=False, header=False)
+
+                print("Name Successfully Changed.")
+                break
+
+        elif choice == "3":
+            while True:
+                new_amount = float(input("Enter New Amount or cancel to exit: "))
+
+                if new_amount == "cancel":
+                    break
+
+                df_stocks.iloc[index_to_edit, 2] = new_amount
+                df_stocks.to_csv(username + "_database.txt", sep=",", index=False, header=False)
+
+                print("Amount Successfully Changed.")
+                break
+
+
+        elif choice == "4":
+            while True:
+                new_unit = float(input("Enter New Unit or cancel to exit: "))
+
+                if new_unit == "cancel":
+                    break
+
+                df_stocks.iloc[index_to_edit, 3] = new_unit
+                df_stocks.to_csv(username + "_database.txt", sep=",", index=False, header=False)
+
+                print("Unit Successfully Changed.")
+                break
+
+
+        elif choice == "5":
+            while True:
+                new_cost = float(input("Enter New Cost or cancel to exit: "))
+
+                if new_cost == "cancel":
+                    break
+
+                df_stocks.iloc[index_to_edit, 4] = new_cost
+                df_stocks.to_csv(username + "_database.txt", sep=",", index=False, header=False)
+
+                print("Cost Successfully Changed.")
+                break
+
+
+        elif choice == "6":
+            while True:
+                new_price = float(input("Enter New Price or cancel to exit: "))
+
+                if new_price == "cancel":
+                    break
+
+                df_stocks.iloc[index_to_edit, 5] = new_price
+                df_stocks.to_csv(username + "_database.txt", sep=",", index=False, header=False)
+
+                print("Price Successfully Changed.")
+                break
+
+        elif choice == "7":
+            break
+
+        else:
+            print("Invalid Choice")

@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 def add_product(username):
     while True:
         product_category = input("Enter Product Category: ")
@@ -58,8 +59,7 @@ def add_product(username):
 
 
 def list_product(username):
-    df_stocks = pd.read_csv(username + "_database.txt", sep=",", engine="python", header=None,
-                            names=["Category", "Name", "Amount", "Unit", "Cost", "Price"])
+    df_stocks = pd.read_csv(username + "_database.txt", sep=",", engine="python", header=None, names=["Category", "Name", "Amount", "Unit", "Cost", "Price"])
 
     df_stocks = df_stocks.sort_values(by=["Category"], ascending=True)
 
@@ -70,8 +70,7 @@ def list_product(username):
     print(df_stocks)
 
 def edit_product(username):
-    df_stocks = pd.read_csv(username + "_database.txt", sep=",", engine="python", header=None,
-                            names=["Category", "Name", "Amount", "Unit", "Cost", "Price"])
+    df_stocks = pd.read_csv(username + "_database.txt", sep=",", engine="python", header=None, names=["Category", "Name", "Amount", "Unit", "Cost", "Price"])
 
     df_stocks = df_stocks.sort_values(by=["Category"], ascending=True)
 
@@ -238,4 +237,38 @@ def edit_product(username):
         else:
             print("Invalid Choice")
 
-edit_product("admin")
+
+def remove_product(username):
+    df_stocks = pd.read_csv(username + "_database.txt", sep=",", engine="python", header=None, names=["Category", "Name", "Amount", "Unit", "Cost", "Price"])
+
+    df_stocks = df_stocks.sort_values(by=["Category"], ascending=True)
+    df_stocks = df_stocks.reset_index(drop=True)
+
+    list_product(username)
+
+    print()
+
+    while True:
+        try:
+            index_to_remove = int(input("Enter The Index Of The Product Which You Would Like To Remove: ")) - 1
+        except ValueError:
+            print("Invalid Index, The Index Must Be An Integer")
+        else:
+            break
+
+    print(df_stocks.iloc[index_to_remove])
+
+    while True:
+        question = input(f"Would You Like To Remove Product? (Y/N): ")
+        if question.title() == "Y":
+            df_stocks = df_stocks.drop(index_to_remove)
+            df_stocks.to_csv(username + "_database.txt", sep=",", index=False, header=False)
+            print("Product Successfully Removed.")
+            break
+
+        elif question.title() == "N":
+            print("Operation Cancelled")
+            break
+
+        else:
+            print("Invalid Option")

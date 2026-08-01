@@ -22,6 +22,7 @@ def sign_up():
             user_database = open(username + "_database.txt", "w")
             user_database.close()
             break
+
     else:
         f = open("user_info.txt", "w", encoding="utf-8")
         f.close()

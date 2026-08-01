@@ -289,3 +289,31 @@ def remove_product(username):
         print("No Products To Remove")
         print("Redirecting To Add Menu")
         add_product(username)
+
+
+def menu(username):
+    print(f"--- HELLO {username} ---")
+    print("1. Add Product")
+    print("2. Edit Product")
+    print("3. Remove Product")
+    print("4. View All Products")
+    print("5. Exit")
+    return input("Enter your choice (1-5): ")
+
+
+def stock_controller(username):
+    while True:
+        choice = menu(username)
+        if choice == "1":
+            add_product(username)
+        elif choice == "2":
+            edit_product(username)
+        elif choice == "3":
+            remove_product(username)
+        elif choice == "4":
+            list_product(username)
+        elif choice == "5":
+            print("Exiting...")
+            break
+        else:
+            print("Invalid Option")

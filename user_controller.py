@@ -1,11 +1,11 @@
 import os
 import pandas as pd
-"""from stock_controller import stock_controller"""
+from stock_controller import stock_controller
 
 
 def sign_up():
     if os.path.exists("user_info.txt"):
-        df_user = pd.read_csv("user_info.txt", sep=",", engine="python", header=None, names=["Username", "Password", "Verification"])
+        df_user = pd.read_csv("user_info.txt", sep=",", engine="python", header=None, names=["Username", "Password", "Verification"], encoding="utf-8")
         while True:
             username = input("Enter Username: ")
             usernames = list(df_user["Username"])
@@ -15,7 +15,7 @@ def sign_up():
             password = input("Enter Password: ")
             verification_animal = input("Enter An Animal Name To Later Verification: ")
 
-            with open("user_info.txt", "a") as f:
+            with open("user_info.txt", "a", encoding="utf-8") as f:
                 f.write(f"{username},{password},{verification_animal}\n")
                 print("User Registered Successfully")
 
@@ -31,7 +31,7 @@ def sign_up():
 
 def sign_in():
     if os.path.exists("user_info.txt"):
-        df_user = pd.read_csv("user_info.txt", sep=",", engine="python", header=None, names=["Username", "Password", "Verification"])
+        df_user = pd.read_csv("user_info.txt", sep=",", engine="python", header=None, names=["Username", "Password", "Verification"], encoding="utf-8")
         usernames = list(df_user["Username"])
         passwords = list(df_user["Password"])
 
@@ -54,7 +54,7 @@ def sign_in():
                     else:
                         error_count += 1
                         print("Incorrect Password")
-                """stock_controller(username)"""
+                stock_controller(username)
                 break
 
             else:
@@ -69,7 +69,7 @@ def sign_in():
 
 def edit_user():
     if os.path.exists("user_info.txt"):
-        df_user = pd.read_csv("user_info.txt", sep=",", engine="python", header=None, names=["Username", "Password", "Verification"])
+        df_user = pd.read_csv("user_info.txt", sep=",", engine="python", header=None, names=["Username", "Password", "Verification"], encoding="utf-8")
         usernames = list(df_user["Username"])
 
         if is_empty_check(usernames):
@@ -102,7 +102,7 @@ def edit_user():
                         os.rename(former_username + "_database.txt", new_username + "_database.txt")
                         print("Username Successfully Changed.")
                         break
-                df_user.to_csv("user_info.txt", sep=",", header=False, index=False)
+                df_user.to_csv("user_info.txt", sep=",", header=False, index=False, encoding="utf-8")
                 break
 
             elif option == "2":
@@ -114,7 +114,7 @@ def edit_user():
                         df_user.loc[edit_index,"Password"] = new_password
                         print("Password Successfully Changed.")
                         break
-                df_user.to_csv("user_info.txt", sep=",", header=False, index=False)
+                df_user.to_csv("user_info.txt", sep=",", header=False, index=False, encoding="utf-8")
                 break
 
             elif option == "3":
@@ -135,7 +135,7 @@ def edit_user():
                         os.rename(former_username + "_database.txt", new_username + "_database.txt")
                         print("Username And Password Successfully Changed.")
                         break
-                df_user.to_csv("user_info.txt", sep=",", header=False, index=False)
+                df_user.to_csv("user_info.txt", sep=",", header=False, index=False, encoding="utf-8")
                 break
 
             elif option == "4":
@@ -152,7 +152,7 @@ def edit_user():
 
 def remove_user():
     if os.path.exists("user_info.txt") :
-        df_user = pd.read_csv("user_info.txt", sep=",", engine="python", header=None, names=["Username", "Password", "Verification"])
+        df_user = pd.read_csv("user_info.txt", sep=",", engine="python", header=None, names=["Username", "Password", "Verification"], encoding="utf-8")
         usernames = list(df_user["Username"])
         passwords = list(df_user["Password"])
 
@@ -177,7 +177,7 @@ def remove_user():
 
                             if question.title() == "Y":
                                 df_user = df_user.drop(remove_index)
-                                df_user.to_csv("user_info.txt", sep=",", header=False, index=False)
+                                df_user.to_csv("user_info.txt", sep=",", header=False, index=False, encoding="utf-8")
                                 os.remove(username + "_database.txt")
                                 print(f"{username} Removed Successfully!")
                                 break
